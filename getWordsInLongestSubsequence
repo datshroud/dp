@@ -1,0 +1,46 @@
+class Solution {
+public:
+    bool check(string &a, string& b){
+        int n = a.length();
+        int count = 0;
+        if (a.length() == b.length()){
+            for (int i = 0; i < n; i++){
+                if (a[i] != b[i]) count++;
+            }
+        }
+        return (count == 1 ? true : false);
+    }
+    
+    vector<string> getWordsInLongestSubsequence(vector<string>& words, vector<int>& groups) {
+        int n = words.size();
+        vector<int> dp(n, 1);
+        vector<int> res(n, -1);
+        int maxdp = 0, maxres = 0;
+        for (int i = 0; i < n; i++){
+            for (int j = i - 1; j >= 0; j--){
+                string a = words[i]; string b = words[j];
+                if (groups[i] != groups[j]){
+                    bool c = check(a, b);
+                    if(c){
+                        if (dp[j] + 1 > dp[i]){
+                            dp[i] = dp[j] + 1;
+                            res[i] = j;
+                            if (dp[i] > maxdp){
+                                maxdp = dp[i];
+                                maxres = i;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        vector<string> ans;
+        ans.push_back(words[maxres]);
+        while (res[maxres] != -1){
+            ans.push_back(words[res[maxres]]);
+            maxres = res[maxres];
+        }
+        reverse(ans.begin(), ans.end());
+        return ans;
+    }
+};
